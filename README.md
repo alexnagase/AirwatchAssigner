@@ -11,3 +11,4 @@ Fill in login.csv with the Airwatch Console Server URL, generated API key, and a
 ## To do 
 
 * Take user input to create user before assigning device
+* GUI
