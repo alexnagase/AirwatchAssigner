@@ -67,6 +67,8 @@ with open('data.csv') as f:
         else:
             print "Response Code " + str(r.status_code) + ", Failed"
 
-
+        deviceID = ""
+        enrollmentUserID = ""
+        
 
 
