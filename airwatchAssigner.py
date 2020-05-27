@@ -1,5 +1,5 @@
 #!/usr/bin/python
- 
+
 import requests
 import getpass
 import base64
@@ -14,13 +14,16 @@ password = getpass.getpass("Password for Airwatch admin " + login[2][1] + ": ")
 airwatch_server = "https://" + str(login[0][1])
 aw_tenant_code = str(login[1][1])
 username = str(login[2][1])
-b64auth = base64.b64encode(username + ':' + password)
+b64auth = (base64.b64encode(bytes((username + ':' + password), 'utf-8'))).decode("utf-8")
+print(b64auth)
 
 headers = {
     'Accept': 'application/json',
     'Authorization': 'Basic ' + b64auth,
     'aw-tenant-code': aw_tenant_code,
 }
+
+print(headers)
 
 with open('data.csv') as f:
     data = csv.DictReader(f)
@@ -47,6 +50,7 @@ with open('data.csv') as f:
             )
 
             response = requests.get(airwatch_server + '/API/system/users/search', headers=headers, params=params)
+
             json_data = json.loads(response.text)
 
             enrollmentUserID = str((json_data['Users'])[0]['Id']['Value'])
@@ -55,20 +59,17 @@ with open('data.csv') as f:
         else:
             enrollmentUserID = str(row['user_id'])
 
-        print deviceID
-        print enrollmentUserID
+        print(deviceID)
+        print(enrollmentUserID)
 
         request_url = airwatch_server + '/API/mdm/devices/' + str(deviceID) + '/enrollmentuser/' + str(enrollmentUserID)
-
+        print(request_url)
 
         r = requests.patch(request_url, data=None, headers=headers)
         if r.status_code == 200:
-            print "Response Code 200, Success"
+            print("Response Code 200, Success")
         else:
-            print "Response Code " + str(r.status_code) + ", Failed"
+            print("Response Code " + str(r.status_code) + ", Failed")
 
         deviceID = ""
         enrollmentUserID = ""
-        
-
-
